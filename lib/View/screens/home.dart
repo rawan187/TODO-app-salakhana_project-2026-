@@ -3,6 +3,7 @@ import 'package:salakhana_project/Controller/task_cont.dart';
 import 'package:salakhana_project/Model/task.dart';
 import 'package:salakhana_project/View/screens/add.dart';
 import 'package:salakhana_project/View/screens/update.dart';
+import 'package:salakhana_project/View/widgets/task_tile.dart'; 
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,12 +18,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    controller.loadData(); // Load tasks on page open
+    controller.loadData();
   }
 
   void refresh() {
     setState(() {
-      controller.loadData(); // Refresh UI
+      controller.loadData();
     });
   }
 
@@ -30,75 +31,61 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Tasks", style: TextStyle(color: Colors.white))),
-        backgroundColor: Colors.purple[300],
+        title: Center(child: Text("Your Tasks", style: TextStyle(color: Colors.white))),
+        backgroundColor: Colors.purple[400],
       ),
+
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple[300],
+        backgroundColor: Colors.purple[400],
         onPressed: () async {
-          // Navigate to Add task screen
           final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => Add()),
           );
 
           if (result == true) {
-            refresh(); // Refresh after returning
+            refresh();
           }
         },
         child: Icon(Icons.add, color: Colors.white),
       ),
+
       body: controller.todolist.isEmpty
-          ? Center(child: Text("No Tasks Yet But You Can Start Now"))
+          ? Center(child: Text("No Tasks Yet But You Can Start Now ✨"))
           : ListView.builder(
               itemCount: controller.todolist.length,
               itemBuilder: (context, index) {
+
                 final Task task = controller.todolist[index];
 
-                return Card(
-                  margin: EdgeInsets.all(10),
-                  child: ListTile(
-                    onTap: () async {
-                      // Navigate to Update task screen
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => Update(
-                            index: index,
-                            task: task, //error here
-                          ),
+                return TaskTile(
+                  task: task,
+
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Update(
+                          index: index,
+                          task: task, 
                         ),
-                      );
-                      if (result == true) {
-                        refresh(); // Refresh after update
-                      }
-                    },
-                    title: Text(
-                      task.title,
-                      style: TextStyle(
-                        fontSize: 20,
-                        decoration: task.isDone ? TextDecoration.lineThrough : null,
                       ),
-                    ),
-                    subtitle: Text(
-                      task.description ?? "",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    leading: Checkbox(
-                      value: task.isDone,
-                      onChanged: (_) {
-                        controller.toggleTask(index); // Toggle completion
-                        refresh();
-                      },
-                    ),
-                    trailing: IconButton(
-                      onPressed: () {
-                        controller.deleteTask(index); // Delete task
-                        refresh();
-                      },
-                      icon: Icon(Icons.delete),
-                    ),
-                  ),
+                    );
+
+                    if (result == true) {
+                      refresh();
+                    }
+                  },
+
+                  onToggle: () {
+                    controller.toggleTask(index);
+                    refresh();
+                  },
+
+                  onDelete: () {
+                    controller.deleteTask(index);
+                    refresh();
+                  },
                 );
               },
             ),

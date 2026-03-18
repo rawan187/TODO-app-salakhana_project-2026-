@@ -33,57 +33,103 @@ class _UpdateState extends State<Update> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text("Update Task",style: TextStyle(color: Colors.white))),
-        backgroundColor: Colors.purple[300],
+        backgroundColor: Colors.purple[400],
       ),
       body: Column(
         children: [
 
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: TextField(
               controller: taskController,
               decoration: InputDecoration(
-                label: Text("Task",style: TextStyle(color: Colors.purple,fontSize: 25))
+                labelText: "Task",
+                labelStyle: TextStyle(color: Colors.black, fontSize: 25),
+                
+                // Add circular black border
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // circular radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // keep same radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
               ),
             ),
           ),
 
-          SizedBox(height: 50),
+          SizedBox(height: 25),
 
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: TextField(
               controller: descriptionController,
               decoration: InputDecoration(
-                label: Text("Description",style: TextStyle(color: Colors.purple,fontSize: 25))
+                labelText: "Description",
+                labelStyle: TextStyle(color: Colors.black, fontSize: 25),
+                
+                // Add circular black border
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // circular radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // keep same radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
               ),
             ),
           ),
 
           Spacer(),
 
-          Padding(
+Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
+            child: Row(
+              children: [
+                // Cancel button
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      minimumSize: Size(double.infinity, 60),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
 
-                final updatedTask = Task(
-                  title: taskController.text,
-                  description: descriptionController.text.isEmpty 
-                      ? null 
-                      : descriptionController.text,
-                  isDone: widget.task.isDone,
-                );
+                SizedBox(width: 10),
 
-                controller.updateTask(widget.index, updatedTask);
-
-                Navigator.pop(context, true);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[300],
-                minimumSize: Size(double.infinity, 70),
-              ),
-              child: Text("Update",style: TextStyle(color: Colors.white,fontSize: 25)),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                  
+                      final updatedTask = Task(
+                        title: taskController.text,
+                        description: descriptionController.text.isEmpty 
+                            ? null 
+                            : descriptionController.text,
+                      );
+                  
+                      controller.updateTask(widget.index, updatedTask);
+                  
+                      Navigator.pop(context, true); 
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple[400],
+                      minimumSize: Size(double.infinity, 60),
+                    ),
+                    child: Text("Update",style: TextStyle(color: Colors.white,fontSize: 20)),
+                  ),
+                ),
+              ],
             ),
           )
         ],

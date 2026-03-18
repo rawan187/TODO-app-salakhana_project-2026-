@@ -28,8 +28,10 @@ class MyApp extends StatelessWidget {
       title: 'Todo App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 218, 177, 225)
       ),
       debugShowCheckedModeBanner: false,
+      
       home: const Test(), // Login screen
     );
   }
