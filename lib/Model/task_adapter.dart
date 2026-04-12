@@ -13,12 +13,24 @@ class TaskAdapter extends TypeAdapter<Task> {
     //some thing strange here may delete
     //final createdAt = reader.readDateTime();
 
+    // NEW
+    final isHabit = reader.readBool();
+    final lastCompletedDate = reader.read() as DateTime?;
+
+    final userEmail = reader.readString();
+
     return Task(
       title: title,
       description: description,
       deadline: deadline,
       isDone: isDone,
       //createdAt: createdAt,
+
+      isHabit: isHabit,
+      lastCompletedDate: lastCompletedDate,
+
+      //is this correct
+      userEmail: userEmail,
     );
 
   }
@@ -36,6 +48,11 @@ class TaskAdapter extends TypeAdapter<Task> {
     writer.writeBool(obj.isDone);
     //writer.writeDateTime(obj.createdAt);
 
+    // NEW
+    writer.writeBool(obj.isHabit);
+    writer.write(obj.lastCompletedDate);
+  
+    writer.writeString(obj.userEmail);
   }
 
 }

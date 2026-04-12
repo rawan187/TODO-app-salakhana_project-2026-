@@ -7,16 +7,15 @@ import 'package:salakhana_project/View/screens/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Hive
   await Hive.initFlutter();
 
-  // Register the adapter
   Hive.registerAdapter(TaskAdapter());
 
-  // Open the box only once
+  //await Hive.deleteBoxFromDisk('taskBox'); 
+
   await Hive.openBox<Task>('taskBox');
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -2,17 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:salakhana_project/Controller/task_cont.dart';
 import 'package:salakhana_project/Model/task.dart';
 
-class Add extends StatefulWidget {
-  const Add({super.key});
+class Add extends StatefulWidget { //parameters for add screen
+  final bool isHabit;
+  final String userEmail;
+
+  const Add({
+    super.key,
+    required this.isHabit,
+    required this.userEmail,
+  });
 
   @override
-  State<Add> createState() => _AddState();
+  State<Add> createState() => _AddState(); 
+}
+
+//error message when the user tries to add a task without a title
+void showTitleError(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Missing Task", style: TextStyle(color: Colors.purple[400])),
+        content: Text("You didn't enter the task title.", style: TextStyle(color: Colors.black)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("OK", style: TextStyle(color: Colors.purple[400])),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _AddState extends State<Add> {
 
   TextEditingController taskController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController deadlineController = TextEditingController();
 
   final TaskController controller = TaskController();
 
@@ -20,7 +47,7 @@ class _AddState extends State<Add> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Add Task",style: TextStyle(color: Colors.white))),
+        title: Center(child: Text(widget.isHabit ? "Add Habit" : "Add Task", style: TextStyle(color: Colors.white))),
         backgroundColor: Colors.purple[400],
       ),
       body: Column(
@@ -47,7 +74,7 @@ class _AddState extends State<Add> {
             ),
           ),
 
-          SizedBox(height: 25),
+          SizedBox(height: 20),
 
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -55,6 +82,29 @@ class _AddState extends State<Add> {
               controller: descriptionController,
               decoration: InputDecoration(
                 labelText: "Description",
+                labelStyle: TextStyle(color: Colors.black, fontSize: 25),
+                
+                // Add circular black border
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // circular radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // keep same radius
+                  borderSide: BorderSide(color: Colors.black, width: 2), // black border
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(height: 20),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: TextField(
+              controller: deadlineController,
+              decoration: InputDecoration(
+                labelText: "Deadline",
                 labelStyle: TextStyle(color: Colors.black, fontSize: 25),
                 
                 // Add circular black border
@@ -98,12 +148,24 @@ class _AddState extends State<Add> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      if (taskController.text.isEmpty) {
+                        showTitleError(context);
+                        return;
+                      }
                   
                       final task = Task(
                         title: taskController.text,
                         description: descriptionController.text.isEmpty 
-                            ? null 
-                            : descriptionController.text,
+                          ? null 
+                          : descriptionController.text,
+                          
+                        deadline: deadlineController.text.isEmpty
+                          ? null
+                          : deadlineController.text,
+                            
+                        isHabit: widget.isHabit, 
+                        lastCompletedDate: null,
+                        userEmail: widget.userEmail, // Pass userEmail to the Task model
                       );
                   
                       controller.addTask(task);
@@ -119,7 +181,7 @@ class _AddState extends State<Add> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
